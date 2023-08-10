@@ -15,8 +15,15 @@ spec:
       containers:
         - name: auth
           image: nicovui/auth
+#          image: us.gcr.io/ticketing-dev-395508/auth
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef: 
+                  name: jwt-secret
+                  key: JWT_KEY
 ---
-apiVerion: v1
+apiVersion: v1
 kind: Service
 metadata:
   name: auth-svc

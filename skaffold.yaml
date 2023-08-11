@@ -8,10 +8,7 @@ deploy:
 build:
   local:
     push: false
-#  googleCloudBuild:
-#    projectId: ticketing-dev-395508
   artifacts:
-#    - image: us.gcr.io/ticketing-dev-395508/auth
     - image: nicovui/auth
       context: auth
       docker:

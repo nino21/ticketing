@@ -3,8 +3,9 @@ import cookieSession from 'cookie-session';
 import express from 'express';
 import 'express-async-errors';
 
-import { NotFoundError, errorHandler } from '@nicovuitickets/common';
+import { NotFoundError, currentUser, errorHandler } from '@nicovuitickets/common';
 import { createTickerRouter } from './routes/new';
+import { showTickerRouter } from './routes/show';
 
 const app = express();
 app.set('trust proxy', true);
@@ -15,8 +16,10 @@ app.use(
     secure: process.env.NODE_ENV !== 'test',
   })
 );
+app.use(currentUser);
 
 app.use(createTickerRouter);
+app.use(showTickerRouter);
 
 app.all('*', async () => {
   throw new NotFoundError();

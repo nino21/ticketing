@@ -17,6 +17,13 @@ spec:
                 name: auth-svc
                 port:
                   number: 3000
+          - path: /api/tickets/?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: tickets-svc
+                port:
+                  number: 3000
           - path: /?(.*)
             pathType: Prefix
             backend:

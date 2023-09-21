@@ -1,6 +1,5 @@
-import { NotFoundError, requireAuth, validateRequest } from '@nicovuitickets/common';
+import { NotFoundError } from '@nicovuitickets/common';
 import express, { Request, Response } from 'express';
-import { body } from 'express-validator';
 import { Ticket } from '../models/tickets';
 
 const router = express.Router();
@@ -15,4 +14,4 @@ router.get('/api/tickets/:id', async (req: Request, res: Response) => {
   res.send(ticket);
 });
 
-export { router as showTickerRouter };
+export { router as showTicketRouter };

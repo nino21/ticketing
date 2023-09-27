@@ -6,12 +6,12 @@ manifests:
 deploy:
   kubectl: {}
 build:
-  # local:
-  #   push: false
-  googleCloudBuild:
-    projectId: ticketing-dev-395508
+  local:
+    push: false
+  #googleCloudBuild:
+  #  projectId: ticketing-dev-395508
   artifacts:
-    - image: gcr.io/ticketing-dev-395508/auth
+    - image: nicovui/auth
       context: auth
       docker:
         dockerfile: Dockerfile
@@ -19,7 +19,7 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
-    - image: gcr.io/ticketing-dev-395508/ticketing-client
+    - image: nicovui/ticketing-client
       context: client
       docker:
         dockerfile: Dockerfile
@@ -27,7 +27,7 @@ build:
         manual:
           - src: "**/*.js"
             dest: .
-    - image: gcr.io/ticketing-dev-395508/tickets
+    - image: nicovui/tickets
       context: tickets
       docker:
         dockerfile: Dockerfile

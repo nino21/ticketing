@@ -6,10 +6,10 @@ manifests:
 deploy:
   kubectl: {}
 build:
-  local:
-    push: false
-  #googleCloudBuild:
-  #  projectId: ticketing-dev-395508
+  # local:
+  #   push: false
+  googleCloudBuild:
+    projectId: ticketing-dev-395508
   artifacts:
     - image: nicovui/auth
       context: auth

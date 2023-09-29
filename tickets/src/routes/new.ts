@@ -2,6 +2,8 @@ import { requireAuth, validateRequest } from '@nicovuitickets/common';
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { Ticket } from '../models/tickets';
+import { TicketCreatedPublisher } from '../events/publishers/ticket-created-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -20,7 +22,14 @@ router.post(
       price,
       userId: req.currentUser!.id,
     });
-    await ticket.save();
+    const savedTicket = await ticket.save();
+    await new TicketCreatedPublisher(natsWrapper.client).publish({
+      id: savedTicket.id,
+      title: savedTicket.title,
+      price: savedTicket.price,
+      userId: savedTicket.userId,
+    });
+
     res.status(201).send(ticket);
   }
 );

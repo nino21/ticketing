@@ -7,7 +7,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules: 
-    - host: nvticketing.ddns.net
+    - host: ticketing.dev
       http:
         paths:
           - path: /api/users/?(.*)

@@ -11,9 +11,18 @@ const start = async () => {
   if (!process.env.MONGO_URI) {
     throw new Error('MONGO_URI environment variable is not defined');
   }
+  if (!process.env.NATS_CLIENT_ID) {
+    throw new Error('NATS_CLIENT_ID environment variable is not defined');
+  }
+  if (!process.env.NATS_CLUSTER_ID) {
+    throw new Error('NATS_CLUSTER_ID environment variable is not defined');
+  }
+  if (!process.env.NATS_URL) {
+    throw new Error('NATS_URL environment variable is not defined');
+  }
 
   try {
-    await natsWrapper.connect('ticketing', randomBytes(4).toString('hex'), 'http://nats-svc:4222');
+    await natsWrapper.connect(process.env.NATS_CLUSTER_ID, process.env.NATS_CLIENT_ID, process.env.NATS_URL);
     // we put it here in a central location (index.ts) because process.exit(); is not nice is hidden somewhere in a common library
     natsWrapper.client.on('close', () => {
       console.log('NATS connection closed');

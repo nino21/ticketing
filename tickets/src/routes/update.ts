@@ -1,4 +1,10 @@
-import { NotAuthorizedError, NotFoundError, requireAuth, validateRequest } from '@nicovuitickets/common';
+import {
+  BadRequestError,
+  NotAuthorizedError,
+  NotFoundError,
+  requireAuth,
+  validateRequest,
+} from '@nicovuitickets/common';
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { Ticket } from '../models/tickets';
@@ -22,6 +28,10 @@ router.put(
       throw new NotFoundError();
     }
 
+    if (ticket.orderId) {
+      throw new BadRequestError('Cannot edit a reserved ticket');
+    }
+
     if (ticket.userId !== req.currentUser!.id) {
       throw new NotAuthorizedError();
     }
@@ -34,6 +44,7 @@ router.put(
     const savedTicket = await ticket.save();
     new TicketUpdatedPublisher(natsWrapper.client).publish({
       id: savedTicket.id,
+      version: savedTicket.version,
       title: savedTicket.title,
       price: savedTicket.price,
       userId: savedTicket.userId,

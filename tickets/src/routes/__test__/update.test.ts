@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import request from 'supertest';
 import { app } from '../../app';
 import { natsWrapper } from '../../nats-wrapper';
+import { Ticket } from '../../models/tickets';
 
 const createTicket = (title: string, price: number, cookie?: string[]) => {
   if (!cookie) {
@@ -87,4 +88,22 @@ it('should publish an event', async () => {
     .expect(200);
 
   expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
+
+it('should return a 400 if the ticket is resrved', async () => {
+  const cookie = global.signin();
+  const title: string = 'new title';
+  const price: number = 99;
+  const response = await createTicket('test title 1', 20);
+  await request(app).put(`/api/tickets/${response.body.id}`).set('Cookie', cookie).send({ title, price }).expect(401);
+
+  const ticket = await Ticket.findById(response.body.id);
+  ticket!.orderId = new mongoose.Types.ObjectId().toHexString();
+  await ticket!.save();
+
+  await request(app)
+    .put(`/api/tickets/${response.body.id}`)
+    .set('Cookie', cookie)
+    .send({ title: title, price: price })
+    .expect(400);
 });

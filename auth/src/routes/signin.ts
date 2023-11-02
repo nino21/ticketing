@@ -2,7 +2,7 @@ import { BadRequestError, validateRequest } from '@nicovuitickets/common';
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
-import { User } from '../models/users';
+import { User } from '../models/user';
 import { Password } from '../services/password';
 
 const router = express.Router();

@@ -5,10 +5,13 @@ import { app } from '../app';
 import jwt from 'jsonwebtoken';
 
 declare global {
-  var signin: () => string[];
+  var signin: (id?: string) => string[];
 }
 
 jest.mock('../nats-wrapper');
+
+process.env.STRIPE_KEY =
+  'sk_test_51OAYNIIdUHQ0gAWisqKiqY2fa9GzDpbwPqJRavS3EFoQ8eD6ac2e7OUqDBVLil1SPuYMeseap4Jn3c34zT5rmhbX00geFh2LDR';
 
 let mongo: any;
 
@@ -39,10 +42,10 @@ afterAll(async () => {
 });
 
 // global just to save the hassle of importing the helper in every relevant test files
-global.signin = () => {
+global.signin = (id?: string) => {
   // Build a JWT payload {id, email}
   const payload = {
-    id: new mongoose.Types.ObjectId().toHexString(),
+    id: id || new mongoose.Types.ObjectId().toHexString(),
     email: 'test@test.com',
   };
 

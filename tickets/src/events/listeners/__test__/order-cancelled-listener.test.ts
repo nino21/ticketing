@@ -1,7 +1,6 @@
 import { OrderCancelledEvent, OrderCreatedEvent, OrderStatus } from '@nicovuitickets/common';
 import { Ticket } from '../../../models/tickets';
 import { natsWrapper } from '../../../nats-wrapper';
-import { OrderCreatedListener } from '../order-created-listener';
 import mongoose from 'mongoose';
 import { OrderCancelledListener } from '../order-cancelled-listener';
 

@@ -4,6 +4,7 @@ import { app } from '../../app';
 import { Order } from '../../models/order';
 import { OrderStatus } from '@nicovuitickets/common';
 import { stripe } from '../../stripe';
+import { Payment } from '../../models/payment';
 
 // jest.mock('../../stripe'); // useful if we don't want to test directly with real stripe API
 
@@ -59,7 +60,7 @@ it('should return a 400 when purchasing a cancelled order ', async () => {
     .expect(400);
 });
 
-it('should return a 204 when purchasing a valid order with valid inputs', async () => {
+it('should return a 201 when purchasing a valid order with valid inputs', async () => {
   const userId = new mongoose.Types.ObjectId().toHexString();
   const price = Math.floor(Math.random() * 100000);
   const order = Order.build({
@@ -97,4 +98,10 @@ it('should return a 204 when purchasing a valid order with valid inputs', async 
   expect(stripeCharge).toBeDefined();
   expect(stripeCharge!.currency).toEqual('eur');
   // only for testing with real stripe API
+
+  const payment = await Payment.findOne({
+    orderId: order.id,
+    stripeId: stripeCharge!.id,
+  });
+  expect(payment).not.toBeNull();
 });

@@ -10,6 +10,9 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { Order } from '../models/order';
 import { stripe } from '../stripe';
+import { Payment } from '../models/payment';
+import { PaymentCreatedPublisher } from '../events/publishers/payment-create-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -34,10 +37,23 @@ router.post(
     }
 
     // Create stripe charge
-    await stripe.charges.create({
+    const charge = await stripe.charges.create({
       currency: 'eur',
       amount: order.price * 100,
       source: token,
+    });
+    // save payment info in our database
+    const payment = Payment.build({
+      orderId,
+      stripeId: charge.id,
+    });
+    payment.save();
+
+    // we do not await because we don't care if the event is published before returning our response.
+    new PaymentCreatedPublisher(natsWrapper.client).publish({
+      id: payment.id,
+      orderId: payment.orderId,
+      stripeId: payment.stripeId,
     });
 
     res.status(201).send({ success: true });

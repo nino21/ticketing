@@ -17,7 +17,7 @@ export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent
     if (order.status === OrderStatus.Complete) {
       // we don't want to cancel a completed order
       // we ack the expiration message to mark it as treated
-      msg.ack();
+      return msg.ack();
     }
 
     order.set({ status: OrderStatus.Cancelled });

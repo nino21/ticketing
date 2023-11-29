@@ -29,4 +29,4 @@ jobs:
       - name: push to Digital Ocean kubenetes cluster
         run: doctl kubernetes cluster kubeconfig save ticketing
       - name: apply all deployments
-        run: kubectl apply -f infra/k8S && kubectl apply -f infra/k8S-prod
+        run: kubectl apply -f infra/k8s && kubectl apply -f infra/k8s-prod

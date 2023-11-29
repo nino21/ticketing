@@ -27,7 +27,7 @@ jobs:
       - name: build docker image
         run: cd auth && docker build -t nicovui/auth .
       - name: login to docker hub
-        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

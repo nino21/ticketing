@@ -33,3 +33,11 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: push to docker hub
         run: docker push nicovui/auth
+      - name: initialize doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: push to Digital Ocean kubenetes cluster
+        run: doctl kubernetes cluster kubeconfig save ticketing
+      - name: restart auth deployment
+        run: kubectl rollout restart deployment auth-depl

@@ -32,7 +32,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: push to docker hub
-        run: docker push nicovui/client
+        run: docker push nicovui/ticketing-client
       - name: initialize doctl
         uses: digitalocean/action-doctl@v2
         with:
